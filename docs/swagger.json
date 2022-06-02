@@ -1,0 +1,128 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "基于Gin、Gorm框架的在线练习系统",
+    "title": "在线练习系统",
+    "contact": {
+      "name": "LL",
+      "url": "http://www.swagger.io/support",
+      "email": "support@swagger.io"
+    },
+    "license": {
+      "name": "Apache 2.0",
+      "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+    },
+    "version": "1.0"
+  },
+  "host": "localhost:8000",
+  "paths": {
+    "/problem-list": {
+      "get": {
+        "tags": [
+          "公共接口"
+        ],
+        "summary": "问题列表",
+        "parameters": [
+          {
+            "type": "integer",
+            "description": "page",
+            "name": "page",
+            "in": "query"
+          },
+          {
+            "type": "integer",
+            "description": "size",
+            "name": "size",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "keyword",
+            "name": "keyword",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "{\"code\":200,\"data\":{},\"msg\":\"ok\"}",
+            "schema": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "/submit-list": {
+      "get": {
+        "tags": [
+          "公共接口"
+        ],
+        "summary": "提交列表",
+        "parameters": [
+          {
+            "type": "integer",
+            "description": "page",
+            "name": "page",
+            "in": "query"
+          },
+          {
+            "type": "integer",
+            "description": "size",
+            "name": "size",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "problem_identity",
+            "name": "problem_identity",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "user_identity",
+            "name": "user_identity",
+            "in": "query"
+          },
+          {
+            "type": "integer",
+            "description": "status",
+            "name": "status",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "{\"code\":200,\"data\":{},\"msg\":\"ok\"}",
+            "schema": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "/user-list": {
+      "get": {
+        "tags": [
+          "公共接口"
+        ],
+        "summary": "用户详情",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "用户标识identity",
+            "name": "identity",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "{\"code\":200,\"data\":{},\"msg\":\"ok\"}",
+            "schema": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    }
+  }
+}
