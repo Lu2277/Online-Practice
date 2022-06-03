@@ -23,7 +23,7 @@ func Router() *gin.Engine {
 	//用户列表
 	r.GET("/user-list", GetUser)
 	//用户登陆
-	r.GET("/login", GetUser)
+	r.POST("/login", Login)
 
 	return r
 }
