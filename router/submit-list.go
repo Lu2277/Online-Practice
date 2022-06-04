@@ -49,8 +49,8 @@ func GetSubmit(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
 		"code": 200,
 		"data": map[string]interface{}{
-			"提交列表": data,
 			"提交总数": count,
+			"提交列表": data,
 		},
 		"msg": "ok",
 	})

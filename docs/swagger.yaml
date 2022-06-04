@@ -53,6 +53,67 @@ paths:
       summary: 问题列表
       tags:
         - 公共接口
+  /rank-list:
+    get:
+      responses:
+        "200":
+          description: '{"code":200,"data":{},"msg":"ok"}'
+          schema:
+            type: string
+      summary: 用户排行榜
+      tags:
+        - 公共接口
+  /register:
+    post:
+      parameters:
+        - description: 邮箱
+          in: formData
+          name: email
+          required: true
+          type: string
+        - description: 验证码
+          in: formData
+          name: code
+          required: true
+          type: string
+        - description: 名字
+          in: formData
+          name: name
+          required: true
+          type: string
+        - description: 密码
+          in: formData
+          name: password
+          required: true
+          type: string
+        - description: 手机号
+          in: formData
+          name: phone
+          type: string
+      responses:
+        "200":
+          description: '{"code":200,"data":{},"msg":"ok"}'
+          schema:
+            type: string
+      summary: 用户注册
+      tags:
+        - 公共接口
+  /send-code:
+    post:
+      parameters:
+        - description: email
+          in: formData
+          name: email
+          required: true
+          type: string
+      responses:
+        "200":
+          description: '{"code":200,"data":{},"msg":"ok"}'
+          schema:
+            type: string
+      summary: 发送验证码
+      tags:
+        - 公共接口
   /submit-list:
     get:
       parameters:

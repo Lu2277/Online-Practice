@@ -33,6 +33,7 @@ func GetProblem(c *gin.Context) {
 	keyword := c.Query("keyword")
 	data := make([]*models.Problem, 0)
 	tx := models.GetProblemList(keyword)
+	//Offset 从哪一页开始、默认从第一页开始；Limit 限制每页显示的记录数，默认为20条
 	err = tx.Count(&count).Offset(page).Limit(size).Find(&data).Error
 	if err != nil {
 		log.Println(err)
@@ -41,8 +42,8 @@ func GetProblem(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
 		"code": 200,
 		"data": map[string]interface{}{
-			"问题列表": data,
 			"问题总数": count,
+			"问题列表": data,
 		},
 		"msg": "ok",
 	})
