@@ -77,7 +77,7 @@ func Login(c *gin.Context) {
 			return
 		}
 	}
-	token, err := helper.GenerateToken(data.Identity, data.Name)
+	token, err := helper.GenerateToken(data.Identity, data.Name, data.IsAdmin)
 	if err != nil {
 		c.JSON(http.StatusOK, gin.H{
 			"code": -1,
@@ -86,9 +86,9 @@ func Login(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{
-		"code": 200,
-		"data": token,
-		"msg":  "登录成功",
+		"code":  200,
+		"token": token,
+		"msg":   "登录成功",
 	})
 }
 
@@ -190,7 +190,7 @@ func Register(c *gin.Context) {
 		return
 	}
 	//生成token
-	token, err := helper.GenerateToken(data.Identity, data.Name)
+	token, err := helper.GenerateToken(data.Identity, data.Name, data.IsAdmin)
 	if err != nil {
 		c.JSON(http.StatusOK, gin.H{
 			"code": -1,
@@ -213,6 +213,7 @@ func Register(c *gin.Context) {
 func GetRankList(c *gin.Context) {
 	var count int64
 	data := make([]*models.User, 0)
+	//DESC降序，ASC升序
 	err := models.DB.Model(new(models.User)).Order("right_num DESC,submit_num ASC").Count(&count).Find(&data).Error
 	if err != nil {
 		c.JSON(http.StatusOK, gin.H{

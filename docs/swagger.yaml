@@ -30,6 +30,37 @@ paths:
       summary: 用户登录
       tags:
         - 公共接口
+  /problem-add:
+    post:
+      parameters:
+        - description: authorization
+          in: header
+          name: authorization
+          required: true
+          type: string
+        - description: title
+          in: formData
+          name: title
+          required: true
+          type: string
+        - description: content
+          in: formData
+          name: content
+          required: true
+          type: string
+        - description: test_cases
+          in: formData
+          name: test_cases
+          required: true
+          type: array
+      responses:
+        "200":
+          description: '{"code":200,"data":{},"msg":"ok"}'
+          schema:
+            type: string
+      summary: 创建问题
+      tags:
+        - 管理员私有接口
   /problem-list:
     get:
       parameters:

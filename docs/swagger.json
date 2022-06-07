@@ -46,6 +46,52 @@
         }
       }
     },
+    "/problem-add": {
+      "post": {
+        "tags": [
+          "管理员私有接口"
+        ],
+        "summary": "创建问题",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "authorization",
+            "name": "authorization",
+            "in": "header",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "title",
+            "name": "title",
+            "in": "formData",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "content",
+            "name": "content",
+            "in": "formData",
+            "required": true
+          },
+          {
+            "type": "array",
+            "description": "test_cases",
+            "name": "test_cases",
+            "in": "formData",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "{\"code\":200,\"data\":{},\"msg\":\"ok\"}",
+            "schema": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
     "/problem-list": {
       "get": {
         "tags": [

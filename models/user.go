@@ -9,6 +9,7 @@ type User struct {
 	Password  string `gorm:"column:password;type:varchar(32) ;" json:"password"` //密码
 	Phone     string `gorm:"column:phone;type:varchar(20) ;" json:"phone"`       //手机号
 	Email     string `gorm:"column:email;type:varchar(100) ;" json:"email"`      //邮箱
+	IsAdmin   int    `gorm:"column:is_admin;type:tinyint(1) ;" json:"is_admin"`  //是否是管理员
 	RightNum  string `gorm:"column:right_num;type:int(11) ;" json:"right_num"`   //答对问题次数
 	SubmitNum string `gorm:"column:submit_num;type:int(11) ;" json:"submit_num"` //总共提交问题次数
 }
