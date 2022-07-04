@@ -30,7 +30,7 @@ paths:
       summary: 用户登录
       tags:
         - 公共接口
-  /problem-add:
+  /problem-create:
     post:
       parameters:
         - description: authorization
@@ -84,6 +84,42 @@ paths:
       summary: 问题列表
       tags:
         - 公共接口
+  /problem-modify:
+    put:
+      parameters:
+        - description: authorization
+          in: header
+          name: authorization
+          required: true
+          type: string
+        - description: identity
+          in: formData
+          name: identity
+          required: true
+          type: string
+        - description: title
+          in: formData
+          name: title
+          required: true
+          type: string
+        - description: content
+          in: formData
+          name: content
+          required: true
+          type: string
+        - description: test_cases
+          in: formData
+          name: test_cases
+          required: true
+          type: array
+      responses:
+        "200":
+          description: '{"code":200,"data":{},"msg":"ok"}'
+          schema:
+            type: string
+      summary: 问题修改
+      tags:
+        - 管理员私有接口
   /rank-list:
     get:
       responses:

@@ -54,7 +54,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/problem-add": {
+        "/problem-create": {
             "post": {
                 "tags": [
                     "管理员私有接口"
@@ -124,6 +124,59 @@ const docTemplate = `{
                         "description": "keyword",
                         "name": "keyword",
                         "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"code\":200,\"data\":{},\"msg\":\"ok\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/problem-modify": {
+            "put": {
+                "tags": [
+                    "管理员私有接口"
+                ],
+                "summary": "问题修改",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "authorization",
+                        "name": "authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "identity",
+                        "name": "identity",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "title",
+                        "name": "title",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "content",
+                        "name": "content",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "array",
+                        "description": "test_cases",
+                        "name": "test_cases",
+                        "in": "formData",
+                        "required": true
                     }
                 ],
                 "responses": {

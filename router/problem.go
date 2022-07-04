@@ -4,7 +4,9 @@ import (
 	"Online-Practice/helper"
 	"Online-Practice/models"
 	"encoding/json"
+	"errors"
 	"github.com/gin-gonic/gin"
+	"gorm.io/gorm"
 	"log"
 	"net/http"
 	"strconv"
@@ -51,7 +53,7 @@ func GetProblem(c *gin.Context) {
 	})
 }
 
-// AddProblem
+// ProblemCreate
 // @Tags 管理员私有接口
 // @Summary 创建问题
 //@Param authorization header string true "authorization"
@@ -59,8 +61,8 @@ func GetProblem(c *gin.Context) {
 // @Param content formData string true "content"
 // @Param test_cases formData array true "test_cases"
 // @Success 200 {string} json "{"code":200,"data":{},"msg":"ok"}"
-// @Router /problem-add [post]
-func AddProblem(c *gin.Context) {
+// @Router /problem-create [post]
+func ProblemCreate(c *gin.Context) {
 	title := c.PostForm("title")
 	content := c.PostForm("content")
 	testCases := c.PostFormArray("test_cases")
@@ -125,5 +127,83 @@ func AddProblem(c *gin.Context) {
 		"code":     200,
 		"msg":      "问题创建成功",
 		"identity": data.Identity,
+	})
+}
+
+// ProblemModify
+// @Tags 管理员私有接口
+// @Summary 问题修改
+//@Param authorization header string true "authorization"
+//@Param identity formData string true "identity"
+// @Param title formData string true "title"
+// @Param content formData string true "content"
+// @Param test_cases formData array true "test_cases"
+// @Success 200 {string} json "{"code":200,"data":{},"msg":"ok"}"
+// @Router /problem-modify [put]
+func ProblemModify(c *gin.Context) {
+	identity := c.PostForm("identity")
+	title := c.PostForm("title")
+	content := c.PostForm("content")
+	testCases := c.PostFormArray("test_cases")
+	if identity == "" || title == "" || content == "" || len(testCases) == 0 {
+		c.JSON(http.StatusOK, gin.H{
+			"code": -1,
+			"msg":  "参数不能为空",
+		})
+		return
+	}
+	if err := models.DB.Transaction(func(tx *gorm.DB) error {
+		//	问题基本信息保存到Problem
+		problem := &models.Problem{
+			Title:   title,
+			Content: content,
+		}
+		err := tx.Where("identity = ?", identity).Updates(problem).Error
+		if err != nil {
+			return err
+		}
+		//关联测试用例的更新
+		//1.删除已存在的关联测试用例
+		err = tx.Where("problem_identity = ?", identity).Delete(new(models.TestCase)).Error
+		if err != nil {
+			return err
+		}
+		//2.插入新的关联测试用例
+		testCase := make([]*models.TestCase, 0)
+		for _, v := range testCases {
+			caseMap := make(map[string]string)
+			err := json.Unmarshal([]byte(v), &caseMap)
+			if err != nil {
+				return errors.New("测试用例格式错误")
+			}
+			if _, ok := caseMap["input"]; !ok {
+				return errors.New("测试用例input格式错误")
+			}
+			if _, ok := caseMap["output"]; !ok {
+				return errors.New("测试用例output格式错误")
+			}
+			newTestcase := &models.TestCase{
+				Identity:        helper.GetUUID(),
+				ProblemIdentity: identity,
+				Input:           caseMap["input"],
+				Output:          caseMap["output"],
+			}
+			testCase = append(testCase, newTestcase)
+		}
+		err = tx.Create(testCase).Error
+		if err != nil {
+			return err
+		}
+		return nil
+	}); err != nil {
+		c.JSON(http.StatusOK, gin.H{
+			"code": -1,
+			"msg":  "问题修改失败",
+		})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"code": 200,
+		"msg":  "问题修改成功",
 	})
 }
