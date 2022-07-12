@@ -19,6 +19,7 @@ func AdminCheck() func(c *gin.Context) {
 			})
 			return
 		}
+		//1为管理员，默认为0
 		if userClaims.IsAdmin != 1 {
 			c.Abort()
 			c.JSON(http.StatusOK, gin.H{
