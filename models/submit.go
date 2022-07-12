@@ -15,8 +15,11 @@ type Submit struct {
 func (table Submit) TableName() string {
 	return "submit"
 }
+
+// GetSubmitList 获取提交列表
 func GetSubmitList(problemIdentity, userIdentity string, status int) *gorm.DB {
-	tx := DB.Model(new(Submit)).Preload("ProblemLink").Preload("UserLink")
+	//预加载问题表、用户表
+	tx := DB.Model(&Submit{}).Preload("ProblemLink").Preload("UserLink")
 	if problemIdentity != "" {
 		tx.Where("problem_identity=?", problemIdentity)
 	}
