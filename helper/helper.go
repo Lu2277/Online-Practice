@@ -74,7 +74,7 @@ func CreateRandCode() string {
 // SendCode 发送验证码
 func SendCode(toEmail, code string) error {
 	em := email.NewEmail()
-	// 设置 sender 发送方 的邮箱 ， 此处可以填写自己的邮箱
+	// 设置 sender 发送方的邮箱 ， 此处可以填写自己的邮箱
 	em.From = "LU <2591134973@qq.com>"
 	// 设置 receiver 接收方的邮箱
 	em.To = []string{toEmail}
