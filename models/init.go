@@ -6,6 +6,7 @@ import (
 	"gorm.io/gorm"
 	"log"
 )
+var DB = Init()
 
 func Init() *gorm.DB {
 	dsn := "root:123456@tcp(127.0.0.1:3306)/online-practice?charset=utf8mb4&parseTime=True&loc=Local"
@@ -16,7 +17,7 @@ func Init() *gorm.DB {
 	return db
 }
 
-var DB = Init()
+var RDB = InitRedis()
 
 func InitRedis() *redis.Client {
 	client := redis.NewClient(&redis.Options{
@@ -27,4 +28,4 @@ func InitRedis() *redis.Client {
 	return client
 }
 
-var RDB = InitRedis()
+
