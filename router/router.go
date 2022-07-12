@@ -34,11 +34,16 @@ func Router() *gin.Engine {
 	r.GET("/rank-list", GetRankList)
 
 	//管理员私有接口
-	//问题创建 先检查是否为管理员，再创建问题
-	//r.Group("/admin")
-	r.POST("/problem-create", middlewares.AdminCheck(), ProblemCreate)
-	//问题修改 先检查是否为管理员，再修改问题
-	r.PUT("/problem-modify", middlewares.AdminCheck(), ProblemModify)
+	//问题创建 先检查是否为管理员，再创建/修改/删除问题
+	admin := r.Group("/admin", middlewares.AdminCheck())
+	{
+		admin.POST("/problem-create", ProblemCreate)
+		admin.PUT("/problem-modify", ProblemModify)
+		admin.DELETE("/problem-delete", ProblemDelete)
+	}
+	//r.POST("/problem-create", middlewares.AdminCheck(), ProblemCreate)
+	//r.PUT("/problem-modify", middlewares.AdminCheck(), ProblemModify)
+	//r.DELETE("/problem-delete", middlewares.AdminCheck(), ProblemDelete)
 
 	return r
 }
