@@ -36,6 +36,7 @@ func GetProblem(c *gin.Context) {
 	//获取关键字
 	keyword := c.Query("keyword")
 	data := make([]*models.Problem, 0)
+	//根据keyword关键词查找问题
 	tx := models.GetProblemList(keyword)
 	//Offset 从哪一页开始、默认从第一页开始；Limit 限制每页显示的记录数，默认为20条
 	err = tx.Count(&count).Offset(page).Limit(size).Find(&data).Error
@@ -59,9 +60,9 @@ func GetProblem(c *gin.Context) {
 //@Param authorization header string true "authorization"
 // @Param title formData string true "title"
 // @Param content formData string true "content"
-// @Param test_cases formData array true "test_cases"
+// @Param test_cases formData array false "test_cases"
 // @Success 200 {string} json "{"code":200,"data":{},"msg":"ok"}"
-// @Router /problem-create [post]
+// @Router /admin/problem-create [post]
 func ProblemCreate(c *gin.Context) {
 	title := c.PostForm("title")
 	content := c.PostForm("content")
@@ -94,14 +95,14 @@ func ProblemCreate(c *gin.Context) {
 		if _, ok := caseMap["input"]; !ok {
 			c.JSON(http.StatusOK, gin.H{
 				"code": -1,
-				"msg":  "测试用例格式错误",
+				"msg":  "测试用例输入格式错误",
 			})
 			return
 		}
 		if _, ok := caseMap["output"]; !ok {
 			c.JSON(http.StatusOK, gin.H{
 				"code": -1,
-				"msg":  "测试用例格式错误",
+				"msg":  "测试用例输出格式错误",
 			})
 			return
 		}
@@ -137,9 +138,9 @@ func ProblemCreate(c *gin.Context) {
 //@Param identity formData string true "identity"
 // @Param title formData string true "title"
 // @Param content formData string true "content"
-// @Param test_cases formData array true "test_cases"
+// @Param test_cases formData array false "test_cases"
 // @Success 200 {string} json "{"code":200,"data":{},"msg":"ok"}"
-// @Router /problem-modify [put]
+// @Router /admin/problem-modify [put]
 func ProblemModify(c *gin.Context) {
 	identity := c.PostForm("identity")
 	title := c.PostForm("title")
@@ -205,5 +206,45 @@ func ProblemModify(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
 		"code": 200,
 		"msg":  "问题修改成功",
+	})
+}
+
+// ProblemDelete
+// @Tags 管理员私有接口
+// @Summary 问题删除
+//@Param authorization header string true "authorization"
+//@Param identity query string true "identity"
+// @Success 200 {string} json "{"code":200,"data":{},"msg":"ok"}"
+// @Router /admin/problem-delete [delete]
+func ProblemDelete(c *gin.Context) {
+	identity := c.Query("identity")
+	if identity == "" {
+		c.JSON(http.StatusOK, gin.H{
+			"code": -1,
+			"msg":  "参数不能为空",
+		})
+		return
+	}
+	err := models.DB.Where("identity= ?", identity).Delete(&models.Problem{}).Error
+	if err != nil {
+		c.JSON(http.StatusOK, gin.H{
+			"code": -1,
+			"msg":  "问题删除出错",
+		})
+		log.Println(err)
+		return
+	}
+	//删除已存在的关联测试用例
+	err = models.DB.Where("problem_identity = ?", identity).Delete(&models.TestCase{}).Error
+	if err != nil {
+		c.JSON(http.StatusOK, gin.H{
+			"code": -1,
+			"msg":  "关联测试用例删除出错" + err.Error(),
+		})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"code": 200,
+		"msg":  "问题删除成功",
 	})
 }
