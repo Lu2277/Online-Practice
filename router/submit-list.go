@@ -50,7 +50,7 @@ func GetSubmit(c *gin.Context) {
 		"code": 200,
 		"data": map[string]interface{}{
 			"提交总数": count,
-			"提交列表": data,
+			"提交详情": data,
 		},
 		"msg": "ok",
 	})
